@@ -48,7 +48,7 @@ def matlab_solve(matfile_target, discard_matfile=True, **_):
 
     # Cleanup
     if discard_matfile:
-        print "now deleting {0}".format(matfile_target)
+        print("now deleting {0}".format(matfile_target))
         os.remove(matfile_target)
 
     return msg
@@ -86,7 +86,7 @@ def octave_solve(matfile_target, discard_matfile=True, cmd="octave", **_):
 
     # Cleanup
     if discard_matfile:
-        print "now deleting {0}".format(matfile_target)
+        print("now deleting {0}".format(matfile_target))
         os.remove(matfile_target)
 
     return msg

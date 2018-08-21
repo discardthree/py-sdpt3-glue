@@ -13,9 +13,9 @@
 
 import os.path
 
-import sedumi_writer as sw
-import solve_locally as ls
-import result as res
+from . import sedumi_writer as sw
+from . import solve_locally as ls
+from . import result as res
 
 
 MATLAB = 'matlab'

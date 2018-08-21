@@ -85,7 +85,7 @@ def make_result_summary(result):
 
 def print_summary(result):
     ''' Prints out the summary produced by make_result_summary. '''
-    print "\nResult summary:\n" + make_result_summary(result)
+    print("\nResult summary:\n" + make_result_summary(result))
 
 
 def can_use_msg(msg):
@@ -189,7 +189,7 @@ def extract_X(msg):
                 for row, line in enumerate(chunk_lines):
                     for k, item in enumerate(re.split(r'\s+', line)):
                         Xlist[i][row, col_start + k] = float(item)
-            print "Imported X[{0}] as a matrix with shape {1}.".format(i, Xlist[i].shape)
+            print("Imported X[{0}] as a matrix with shape {1}.".format(i, Xlist[i].shape))
 
         elif ' ' in Xmsg or '\n' in Xmsg:
             # Otherwise if it has spaces or line breaks it's a non-chunked
@@ -208,12 +208,12 @@ def extract_X(msg):
             for row, line in enumerate(Xmsg_lines):
                 for k, item in enumerate(re.split(r'\s+', line.strip())):
                     Xlist[i][row, k] = float(item)
-            print "Imported X[{0}] as a matrix with shape {1}.".format(i, Xlist[i].shape)
+            print("Imported X[{0}] as a matrix with shape {1}.".format(i, Xlist[i].shape))
 
         else:
             # Otherwise it's a scalar
             Xlist[i] = float(Xmsg)
-            print "Imported X[{0}] as a scalar.".format(i)
+            print("Imported X[{0}] as a scalar.".format(i))
 
     return Xlist
 
