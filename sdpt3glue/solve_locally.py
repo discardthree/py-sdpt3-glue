@@ -42,13 +42,13 @@ def matlab_solve(matfile_target, discard_matfile=True, **_):
         SubprocessCallError when some error happens while executing matlab.
     '''
     # Generating the .mat file
-    run_command = "matlab -r \"SDPT3solve('{0}')\" -nodisplay -nojvm".format(
+    run_command = "matlab -batch \"SDPT3solve('{0}')\"".format(
         matfile_target)
     msg = _run_command_get_output(run_command)
 
     # Cleanup
     if discard_matfile:
-        print "now deleting {0}".format(matfile_target)
+        print("now deleting {0}".format(matfile_target))
         os.remove(matfile_target)
 
     return msg
@@ -86,7 +86,7 @@ def octave_solve(matfile_target, discard_matfile=True, cmd="octave", **_):
 
     # Cleanup
     if discard_matfile:
-        print "now deleting {0}".format(matfile_target)
+        print("now deleting {0}".format(matfile_target))
         os.remove(matfile_target)
 
     return msg
@@ -100,7 +100,7 @@ def _run_command_get_output(run_command):
     # Performing the Matlab solve
     try:
         proc = subprocess.Popen(
-            run_command, shell=True, stdout=subprocess.PIPE)
+            run_command, shell=True, stdout=subprocess.PIPE, text=True)
         return proc.communicate()[0]
 
     except:

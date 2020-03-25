@@ -10,12 +10,12 @@
 """
 
 """
+from pathlib import Path
+import os
 
-import os.path
-
-import sedumi_writer as sw
-import solve_locally as ls
-import result as res
+from . import sedumi_writer as sw
+from . import solve_locally as ls
+from . import result as res
 
 
 MATLAB = 'matlab'
@@ -34,7 +34,7 @@ def check_output_target(mode, output_target):
     assert mode not in ['matlab', 'octave'] or output_target, \
         "If mode is 'matlab' or 'octave', an output_target must be provided."
     if output_target:
-        assert not os.path.exists(output_target), \
+        assert not Path(output_target).exists(), \
             ("Something already exists at output_target, we won't overwrite "
              "it:\n{0}".format(output_target))
 
@@ -47,14 +47,14 @@ def sdpt3_solve_problem(
     it by NEOS or a local Matlab/SDPT3 installation, then constructs the result,
     prints it, and returns it.
     '''
-    assert not os.path.exists(matfile_target), \
+    assert not Path(matfile_target).exists(), \
         ("Something already exists at matfile_target, we won't overwrite "
          "it:\n{0}".format(matfile_target))
     check_output_target(mode, output_target)
 
     # Write the problem to a .mat file in Sedumi format
     problem_data = problem.get_problem_data('CVXOPT')
-    sw.write_cvxpy_to_mat(problem_data, matfile_target)
+    sw.write_cvxpy_to_mat(problem_data[0], matfile_target)
 
     return sdpt3_solve_mat(matfile_target,
                            mode,
@@ -70,12 +70,16 @@ def sdpt3_solve_mat(
     problem it contains with NEOS or a local Matlab/SDPT3 installation, then
     constructs the result, prints it, and returns it.
     '''
-    matfile_path = os.path.abspath(matfile_path)
+    matfile_path = Path(matfile_path).absolute()
     check_output_target(mode, output_target)
 
     # Depending on the mode, solve the problem using a local Matlab+SDPT3
     # installation or on the NEOS server
     if mode == MATLAB:
+        try:
+            os.environ['MATLABPATH'] += ':{}'.format(str(Path(__file__).resolve().parent.absolute()))
+        except:
+            os.environ['MATLABPATH'] = str(Path(__file__).resolve().parent.absolute())
         msg = ls.matlab_solve(matfile_path,
                               discard_matfile=discard_matfile)
     elif mode == OCTAVE:

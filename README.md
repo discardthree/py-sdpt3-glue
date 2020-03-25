@@ -36,7 +36,7 @@ from cvxpy import *
 import sdpt3glue.solve as slv
 
 # Declare variables:
-X = Semidef(3)
+X = Variable((3,3), PSD=3)
 
 # Define objective:
 obj = Minimize(X[0, 2])
