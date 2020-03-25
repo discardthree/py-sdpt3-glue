@@ -42,7 +42,7 @@ def matlab_solve(matfile_target, discard_matfile=True, **_):
         SubprocessCallError when some error happens while executing matlab.
     '''
     # Generating the .mat file
-    run_command = "matlab -r \"SDPT3solve('{0}')\" -nodisplay -nojvm".format(
+    run_command = "matlab -batch \"SDPT3solve('{0}')\"".format(
         matfile_target)
     msg = _run_command_get_output(run_command)
 
