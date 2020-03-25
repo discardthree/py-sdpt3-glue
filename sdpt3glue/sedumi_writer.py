@@ -86,11 +86,12 @@ def problem_data_prep(problem_data):
       - Transpose c to be a row vector, which matches the organization of A, b, G, h
         (rows are for constraints, columns are for variables)
     '''
-    problem_data['A'] = cvxmat(1. * problem_data['A'])
-    problem_data['b'] = cvxmat(1. * problem_data['b'])
-    problem_data['G'] = cvxmat(1. * problem_data['G'])
-    problem_data['h'] = cvxmat(1. * problem_data['h'])
-    problem_data['c'] = cvxmat(1. * problem_data['c']).T
+    
+    problem_data['A'] = cvxmat(problem_data['A'].todense())
+    problem_data['b'] = cvxmat(problem_data['b'])
+    problem_data['G'] = cvxmat(problem_data['G'].todense())
+    problem_data['h'] = cvxmat(problem_data['h'])
+    problem_data['c'] = cvxmat(problem_data['c']).T
     return problem_data
 
 
@@ -103,9 +104,18 @@ def make_sedumi_format_problem(problem_data, simplify=True):
         A, b, c, K: Data defining an equivalent problem in Sedumi format.
     '''
     problem_data = problem_data_prep(problem_data)
-    dims = problem_data['dims']
-    assert not dims[
-        'q'], "Sorry, at this time we can't handle SOC constraints!"
+    cone_dims = problem_data['dims']
+    dims  = {
+        "f": cone_dims.zero,
+        "l": cone_dims.nonpos,
+        "q": cone_dims.soc,
+        "ep": cone_dims.exp,
+        "s": cone_dims.psd,
+    }
+
+    
+    assert not dims['q'], \
+        "Sorry, at this time we can't handle SOC constraints!"
 
     nx = len(problem_data['c'])
     ni = dims['l']
